@@ -1,0 +1,28 @@
+version: 2.1
+
+executors:
+  python-executor:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+
+jobs:
+  test:
+    executor: python-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - run:
+          name: Run Tests
+          command: python -m unittest discover -s hw-02a
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+ 
