@@ -1,28 +1,23 @@
 version: 2.1
 
-executors:
-  python-executor:
-    docker:
-      - image: circleci/python:3.7
-    working_directory: ~/repo
+orbs: 
+    python: circleci/python@2.0.1
 
 jobs:
-  test:
-    executor: python-executor
+  build-and-test:
+    docker:
+      - image: cimg/python:3.10.2
     steps:
       - checkout
-      - run:
-          name: Install dependencies
+      - run: 
           command: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-      - run:
-          name: Run Tests
-          command: python -m unittest discover -s hw-02a
+            pip install pytest
+            pytest --junitxml=test-results/junit.xml TestTriangle.py
+      - store_test_results:
+          path: test-results
 
 workflows:
-  version: 2
-  test:
+  testing_triangles:
     jobs:
-      - test
+      - build-and-test
  
